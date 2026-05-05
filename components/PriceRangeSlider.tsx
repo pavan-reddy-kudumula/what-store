@@ -1,10 +1,32 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import * as Slider from "@radix-ui/react-slider";
 
-export default function PriceRangeSlider() {
-  const [range, setRange] = useState([0, 1000]);
+export interface PriceRangeSliderProps {
+  onPriceChange?: (min: number, max: number) => void;
+  initialMin?: number;
+  initialMax?: number;
+}
+
+export default function PriceRangeSlider({ 
+  onPriceChange, 
+  initialMin = 0, 
+  initialMax = 1000 
+}: PriceRangeSliderProps) {
+  const [range, setRange] = useState([initialMin, initialMax]);
+
+  // Update range when initial values change
+  useEffect(() => {
+    setRange([initialMin, initialMax]);
+  }, [initialMin, initialMax]);
+
+  const handleRangeChange = (newRange: number[]) => {
+    setRange(newRange);
+    if (onPriceChange) {
+      onPriceChange(newRange[0], newRange[1]);
+    }
+  };
 
   return (
     <div className="w-full"> 
@@ -12,11 +34,10 @@ export default function PriceRangeSlider() {
 
       <Slider.Root
         className="relative flex items-center select-none touch-none w-full h-5"
-        defaultValue={[0, 1000]}
         max={1000}
         step={1}
         value={range}
-        onValueChange={setRange}
+        onValueChange={handleRangeChange}
       >
         {/* The Track */}
         <Slider.Track className="bg-white/30 relative grow rounded-full h-[3.2px]">
@@ -38,8 +59,8 @@ export default function PriceRangeSlider() {
 
       {/* Labels matching image_667be8.png style */}
       <div className="flex justify-between mt-2 text-sm font-medium">
-        <span>{range[0]}</span>
-        <span>{range[1]}</span>
+        <span>${range[0]}</span>
+        <span>${range[1]}</span>
       </div>
     </div>
   );

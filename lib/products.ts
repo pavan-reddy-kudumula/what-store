@@ -1,6 +1,13 @@
-  export const categories = ["All", "Electronics", "Footwear", "Accessories", "Clothing"];
-  
-  export const products = [
+export const categories = ["All", "Electronics", "Footwear", "Accessories", "Clothing"];
+
+export interface FilterParams {
+  category?: string;
+  priceMin?: number;
+  priceMax?: number;
+  search?: string;
+}
+
+export const products = [
     {
       id: 1,
       name: "Running Shoes",
@@ -74,3 +81,34 @@
       rating: 4.9
     },
   ];
+
+export function filterProducts(filters: FilterParams) {
+  return products.filter((product) => {
+    // Filter by category
+    if (filters.category && filters.category !== "All" && product.category !== filters.category) {
+      return false;
+    }
+
+    // Filter by price range
+    if (filters.priceMin !== undefined && product.price < filters.priceMin) {
+      return false;
+    }
+
+    if (filters.priceMax !== undefined && product.price > filters.priceMax) {
+      return false;
+    }
+
+    // Filter by search term
+    if (filters.search && filters.search.trim() !== "") {
+      const searchTerm = filters.search.toLowerCase().trim();
+      const matchesName = product.name.toLowerCase().includes(searchTerm);
+      const matchesDescription = product.description.toLowerCase().includes(searchTerm);
+
+      if (!matchesName && !matchesDescription) {
+        return false;
+      }
+    }
+
+    return true;
+  });
+}
