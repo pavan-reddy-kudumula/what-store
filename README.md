@@ -2,7 +2,7 @@
 
 Live demo: https://what-store.vercel.app/
 
-What Store is a minimal Next.js 13 e-commerce demo showcasing product pages, a simple cart, and reusable UI components.
+What Store is a minimal Next.js 16 e-commerce demo showcasing product pages, a simple cart, and reusable UI components.
 
 **Highlights:**
 - Easy-to-read app structure using the `app/` directory
