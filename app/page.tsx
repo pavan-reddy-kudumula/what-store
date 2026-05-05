@@ -1,28 +1,11 @@
 import Image from "next/image";
 import { products, categories } from "@/lib/products";
-import { Search, ShoppingCart, Star } from "lucide-react";
+import { Search, ShoppingCart } from "lucide-react";
 import PriceRangeSlider from "@/components/PriceRangeSlider";
+import Link from "next/link";
+import { ProductRating } from "@/components/ProductRating";
 
-const renderStars = (rating: number) => {
-  return Array.from({ length: 5 }, (_, index) => {
-    const fill = Math.max(0, Math.min(1, rating - index));
-
-    return (
-      <span key={index} className="relative inline-block h-4 w-4">
-        <Star className="h-4 w-4 text-gray-300" />
-        <span
-          className="absolute inset-0 overflow-hidden text-[#0056b3]"
-          style={{ width: `${fill * 100}%` }}
-          aria-hidden="true"
-        >
-          <Star className="h-4 w-4 fill-current stroke-current" />
-        </span>
-      </span>
-    );
-  });
-};
-
-const ProductPage = () => {
+export default function HomePage() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
       {/* Header */}
@@ -91,30 +74,27 @@ const ProductPage = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {products.map((product) => (
-              <div
+              <div 
                 key={product.id}
                 className="bg-white p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow border border-gray-100 flex flex-col"
               >
-                <div className="aspect-square bg-gray-100 rounded-md mb-4 overflow-hidden">
+                <Link href={`/product/${product.id}`} className="aspect-square bg-gray-100 rounded-md mb-4 overflow-hidden">
                   <img
                     src={product.images[0]}
                     alt={product.name}
                     className="w-full h-full object-cover"
                   />
-                </div>
+                </Link>
                 <h3 className="font-bold text-gray-900">{product.name}</h3>
                 <p className="text-gray-700 font-semibold mb-4">
                   ${product.price}
                 </p>
-                <div className="mb-4 flex items-center gap-2">
-                  <div className="flex items-center gap-0.5" aria-label={`Rated ${product.rating} out of 5`}>
-                    {renderStars(product.rating)}
-                  </div>
-                  <span className="text-sm font-medium text-gray-500">
-                    {product.rating.toFixed(1)}
-                  </span>
-                </div>
-                <button className="mt-auto bg-[#0056b3] text-white py-2 px-4 rounded-md font-medium hover:bg-blue-700 transition-colors">
+                <ProductRating
+                  rating={product.rating ?? 0}
+                  reviewCount={Math.max(12, Math.round((product.rating ?? 4) * 20))}
+                  className="mb-4"
+                />
+                <button className="mt-auto rounded-lg bg-[#0056b3] px-4 py-2 font-medium text-white shadow-sm transition-all hover:bg-[#0466ce] focus:outline-none">
                   Add to Cart
                 </button>
               </div>
@@ -192,5 +172,3 @@ const ProductPage = () => {
     </div>
   );
 };
-
-export default ProductPage;
