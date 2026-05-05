@@ -1,11 +1,29 @@
+'use client';
+
 import Image from "next/image";
 import { products, categories } from "@/lib/products";
 import { Search, ShoppingCart } from "lucide-react";
 import PriceRangeSlider from "@/components/PriceRangeSlider";
 import Link from "next/link";
 import { ProductRating } from "@/components/ProductRating";
+import { useCartStore } from "@/lib/store";
+import { Toaster, toast } from "react-hot-toast";
 
 export default function HomePage() {
+  const addItem = useCartStore((state) => state.addItem);
+
+  const handleAddToCart = (product: {
+    id: number;
+    name: string;
+    price: number;
+    image: string;
+  }) => {
+    addItem(product);
+    toast.success(`${product.name} added to cart`, {
+      duration: 2200,
+    });
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
       {/* Header */}
@@ -25,10 +43,10 @@ export default function HomePage() {
 
         </div>
         <div className="flex justify-between gap-6">
-        <button className="flex items-center gap-2 bg-[#002d5b] text-white px-4 py-2 rounded-lg font-medium hover:bg-black transition-colors">
+        <Link href="/cart" className="flex items-center gap-2 bg-[#002d5b] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#002d5b]/80 transition-colors">
           <ShoppingCart className="h-4 w-4" />
           <span className="hidden sm:inline">Cart</span>
-        </button>
+        </Link>
         <Image src="/avatar.png" alt="avatar" height={50} width={50} className="rounded"/>
         </div>
       </nav>
@@ -94,7 +112,16 @@ export default function HomePage() {
                   reviewCount={Math.max(12, Math.round((product.rating ?? 4) * 20))}
                   className="mb-4"
                 />
-                <button className="mt-auto rounded-lg bg-[#0056b3] px-4 py-2 font-medium text-white shadow-sm transition-all hover:bg-[#0466ce] focus:outline-none">
+                <button 
+                  onClick={() =>
+                    handleAddToCart({
+                      id: product.id,
+                      name: product.name,
+                      price: product.price,
+                      image: product.images[0],
+                    })
+                  }
+                  className="mt-auto rounded-lg bg-[#0056b3] px-4 py-2 font-medium text-white shadow-sm transition-all hover:bg-[#0466ce] focus:outline-none">
                   Add to Cart
                 </button>
               </div>
@@ -102,6 +129,25 @@ export default function HomePage() {
           </div>
         </section>
       </main>
+
+      <Toaster
+        position="bottom-right"
+        toastOptions={{
+          success: {
+            style: {
+              background: "#0f172a",
+              color: "#fff",
+              borderRadius: "9999px",
+              padding: "12px 16px",
+              boxShadow: "0 20px 40px rgba(15, 23, 42, 0.25)",
+            },
+            iconTheme: {
+              primary: "#22c55e",
+              secondary: "#0f172a",
+            },
+          },
+        }}
+      />
 
       {/* Footer */}
       <footer className="bg-[#002d5b] text-white py-12 px-10">

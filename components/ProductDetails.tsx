@@ -1,10 +1,10 @@
 // components/ProductDetails.tsx
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
 import { BadgeCheck, RotateCcw, ShieldCheck, Truck } from "lucide-react";
 import { ProductRating } from "@/components/ProductRating";
+import { CartControls } from "@/components/CartControls";
 
 type Product = {
   id: number;
@@ -17,17 +17,25 @@ type Product = {
 };
 
 export default function ProductDetails({ product }: { product: Product }) {
-  const [qty, setQty] = useState<number>(1);
   const [userRating, setUserRating] = useState<number | null>(null);
-  const increment = () => setQty((q) => q + 1);
-  const decrement = () => setQty((q) => Math.max(1, q - 1));
 
-  const addToCart = () => {
-    // Replace with real cart logic / API call
-    console.log("Add to cart:", { productId: product.id, qty });
-    // Optionally show UI feedback
-    alert(`${qty} × ${product.name} added to cart`);
-  };
+  useEffect(() => {
+    const storedRating = window.localStorage.getItem(`product-rating-${product.id}`);
+
+    if (storedRating === null) return;
+
+    const parsedRating = Number(storedRating);
+
+    if (Number.isFinite(parsedRating) && parsedRating >= 1 && parsedRating <= 5) {
+      setUserRating(parsedRating);
+    }
+  }, [product.id]);
+
+  useEffect(() => {
+    if (userRating === null) return;
+
+    window.localStorage.setItem(`product-rating-${product.id}`, String(userRating));
+  }, [product.id, userRating]);
 
   const handleRatingSubmit = (rating: number) => {
     setUserRating(rating);
@@ -101,53 +109,19 @@ export default function ProductDetails({ product }: { product: Product }) {
           </div>
         </div>
 
-        <div className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4">
-          <div className="flex items-center justify-between gap-3">
-            <div>
-              <p className="text-sm font-medium text-slate-900">Quantity</p>
-              <p className="text-xs text-slate-500">Select how many you need</p>
-            </div>
-            <span className="text-xs font-medium text-slate-500">Limit 1-9</span>
-          </div>
+        <CartControls
+          product={{
+            id: product.id,
+            name: product.name,
+            price: product.price,
+            image: product.images[0],
+          }}
+          variant="default"
+        />
 
-          <div className="mt-4 flex flex-col gap-4 sm:flex-row sm:items-center">
-            <div className="inline-flex items-center overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={decrement}
-                aria-label="Decrease quantity"
-                className="h-11 rounded-none border-0 px-4 text-lg font-semibold text-slate-700 hover:bg-slate-100"
-              >
-                -
-              </Button>
-              <div className="min-w-16 px-4 text-center text-sm font-semibold text-slate-900">
-                {qty}
-              </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={increment}
-                aria-label="Increase quantity"
-                className="h-11 rounded-none border-0 px-4 text-lg font-semibold text-slate-700 hover:bg-slate-100"
-              >
-                +
-              </Button>
-            </div>
-
-            <Button
-              onClick={addToCart}
-              size="lg"
-              className="w-full sm:flex-1 bg-slate-950 text-white shadow-lg shadow-slate-950/15 transition-all hover:bg-slate-800"
-            >
-              Add to Cart
-            </Button>
-          </div>
-
-          <p className="mt-4 text-xs leading-5 text-slate-500">
-            Orders ship with tracking, secure packaging, and responsive support.
-          </p>
-        </div>
+        <p className="mt-4 text-xs leading-5 text-slate-500">
+          Orders ship with tracking, secure packaging, and responsive support.
+        </p>
       </div>
     </section>
   );
