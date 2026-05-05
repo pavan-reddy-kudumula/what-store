@@ -106,9 +106,9 @@ export default function ProductSection() {
     <>
       {/* Header */}
       <nav className="bg-[#0056b3] px-4 md:px-10 py-4 flex items-center justify-between sticky top-0 z-50">
-        <div className="text-white text-3xl font-bold">WhatStore</div>
-        <div className="flex-1 max-w-xl mx-4 md:mx-10">
-          <div className="relative xl:left-8">
+        <div className="text-white text-3xl font-bold">Logo</div>
+        <div className="flex-1 max-w-xl mx-4 md:mx-10 inline">
+          <div className="relative xl:left-40">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-blue-100" />
             <input
               type="text"
@@ -125,7 +125,7 @@ export default function ProductSection() {
         <div className="flex justify-between gap-6">
         <Link href="/cart" className="flex items-center gap-2 bg-[#002d5b] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#002d5b]/80 transition-colors">
           <ShoppingCart className="h-4 w-4" />
-          <span className="hidden sm:inline">Cart</span>
+          <span className="hidden sm:inline text-lg">Cart</span>
         </Link>
         <Image src="/avatar.png" alt="avatar" height={50} width={50} className="rounded"/>
         </div>
@@ -167,7 +167,7 @@ export default function ProductSection() {
 
         {/* Product Grid (right) */}
         <section className="flex-1">
-          <h1 className="text-2xl font-bold text-gray-800 mb-6">
+          <h1 className="text-3xl font-bold text-[#023a71] mb-6">
             Product Listing
           </h1>
           {filteredProducts.length === 0 ? (
@@ -188,8 +188,8 @@ export default function ProductSection() {
                       className="w-full h-full object-cover"
                     />
                   </Link>
-                  <h3 className="font-bold text-gray-900">{product.name}</h3>
-                  <p className="text-gray-700 font-semibold mb-4">
+                  <h3 className="font-sans font-semibold text-lg text-gray-900">{product.name}</h3>
+                  <p className="text-gray-900 font-semibold mb-4">
                     ${product.price}
                   </p>
                   <ProductRating

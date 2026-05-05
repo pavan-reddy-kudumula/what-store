@@ -1,5 +1,3 @@
-'use client';
-
 import { Suspense } from 'react';
 import ProductSection from '../components/ProductSection';
 import { Toaster } from 'react-hot-toast';

@@ -7,7 +7,7 @@ import { Trash2 } from 'lucide-react';
 import { CartControls } from '@/components/CartControls';
 
 export default function CartPage() {
-  const { items, removeItem, deleteItem, getTotalPrice, clearCart } = useCartStore();
+  const { items, deleteItem, getTotalPrice, clearCart } = useCartStore();
 
   const subtotal = getTotalPrice();
   const tax = parseFloat((subtotal * 0.1).toFixed(2));
@@ -48,7 +48,7 @@ export default function CartPage() {
                 >
                   <div className="flex gap-6">
                     {/* Product Image */}
-                    <div className="shrink-0 w-24 h-24 bg-slate-100 rounded-lg overflow-hidden">
+                    <Link href={`/product/${item.id}`} className="shrink-0 w-24 h-24 bg-slate-100 rounded-lg overflow-hidden">
                       <Image
                         src={item.image}
                         alt={item.name}
@@ -56,7 +56,7 @@ export default function CartPage() {
                         height={96}
                         className="w-full h-full object-cover"
                       />
-                    </div>
+                    </Link>
 
                     {/* Product Info */}
                     <div className="grow">
